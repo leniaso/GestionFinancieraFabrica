@@ -48,7 +48,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         userRepository.findByEmail(email).ifPresent(user -> {
             UserDetails userDetails = User.withUsername(user.getEmail())
-                    .password("") // No se necesita la contraseña aquí
+                    .password("{noop}") // No se necesita la contraseña aquí
                     .authorities(List.of())
                     .build();
 
