@@ -25,15 +25,15 @@ public class AuthService {
 
         // Crear el usuario con contraseña encriptada
         User user = new User();
-        user.setFirstName(request.getFirstName());
-        user.setLastName(request.getLastName());
+        user.setPrimer_nombre(request.getPrimer_nombre());
+        user.setApellido(request.getApellido());
         user.setEmail(request.getEmail());
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setContraseña(passwordEncoder.encode(request.getContraseña()));
 
         usuarioRepository.save(user);
 
         String token = jwtService.generateToken(user.getEmail());
-        return new AuthResponse(token, user.getEmail(), user.getFirstName());
+        return new AuthResponse(token, user.getEmail(), user.getPrimer_nombre());
     }
 
     public AuthResponse login(LoginRequest request) {
@@ -42,11 +42,11 @@ public class AuthService {
                 .orElseThrow(() -> new RuntimeException("Credenciales inválidas"));
 
         // Verificar contraseña
-        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+        if (!passwordEncoder.matches(request.getContraseña(), user.getContraseña())) {
             throw new RuntimeException("Credenciales inválidas");
         }
 
         String token = jwtService.generateToken(user.getEmail());
-        return new AuthResponse(token, user.getEmail(), user.getFirstName());
+        return new AuthResponse(token, user.getEmail(), user.getPrimer_nombre());
     }
 }

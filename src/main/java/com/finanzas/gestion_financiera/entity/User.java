@@ -10,15 +10,15 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "first_name", nullable = false)
-    private String firstName;
+    @Column(name = "primer_nombre", nullable = false)
+    private String primer_nombre;
 
-    @Column(name = "last_name", nullable = false)
-    private String lastName;
+    @Column(name = "apellido", nullable = false)
+    private String apellido;
 
     @Column(unique = true, nullable = false)
     private String email;
 
     @Column(nullable = false)
-    private String password;
+    private String contraseña;
 }

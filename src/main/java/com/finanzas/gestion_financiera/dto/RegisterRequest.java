@@ -7,10 +7,10 @@ import lombok.Data;
 public class RegisterRequest {
 
     @NotBlank(message = "El nombre es obligatorio")
-    private String firstName;
+    private String primer_nombre;
 
     @NotBlank(message = "El apellido es obligatorio")
-    private String lastName;
+    private String apellido;
 
     @Email(message = "Email inválido")
     @NotBlank(message = "El email es obligatorio")
@@ -22,5 +22,5 @@ public class RegisterRequest {
             regexp = "^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*]).+$",
             message = "Debe tener mayúscula, número y carácter especial"
     )
-    private String password;
+    private String contraseña;
 }
