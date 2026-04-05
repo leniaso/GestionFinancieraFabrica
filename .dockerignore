@@ -1,0 +1,7 @@
+.git
+.claude
+.mvn
+target
+*.md
+.env
+.gitignore
