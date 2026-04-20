@@ -5,10 +5,13 @@ import com.finanzas.gestion_financiera.dto.TransactionResponse;
 import com.finanzas.gestion_financiera.service.TransactionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 @RestController
 @RequestMapping("/api/v1/transacciones")
@@ -20,11 +23,27 @@ public class TransactionController {
     @PostMapping
     public ResponseEntity<TransactionResponse> crear(
             @Valid @RequestBody TransactionRequest request) {
-        return ResponseEntity.ok(transactionService.crear(request));
+        TransactionResponse response = transactionService.crear(request);
+        agregarLinks(response);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping
-    public ResponseEntity<List<TransactionResponse>> listar() {
-        return ResponseEntity.ok(transactionService.listar());
+    public ResponseEntity<CollectionModel<TransactionResponse>> listar() {
+        List<TransactionResponse> lista = transactionService.listar();
+        lista.forEach(this::agregarLinks);
+
+        CollectionModel<TransactionResponse> collection = CollectionModel.of(
+                lista,
+                linkTo(methodOn(TransactionController.class).listar()).withSelfRel()
+        );
+        return ResponseEntity.ok(collection);
+    }
+
+    private void agregarLinks(TransactionResponse response) {
+        response.add(
+                linkTo(methodOn(TransactionController.class).listar()).withRel("todas"),
+                linkTo(methodOn(TransactionController.class).crear(null)).withRel("crear")
+        );
     }
 }
