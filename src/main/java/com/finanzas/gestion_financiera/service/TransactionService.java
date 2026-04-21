@@ -11,7 +11,9 @@ import com.finanzas.gestion_financiera.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import java.math.BigDecimal;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,22 +26,28 @@ public class TransactionService {
     private final UserRepository userRepository;
 
     public TransactionResponse crear(TransactionRequest request) {
-        // Obtener el usuario autenticado desde el token
+
         String email = SecurityContextHolder.getContext()
                 .getAuthentication().getName();
 
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        // Validar que la categoría existe
+        if (!request.getTipo().equals("INGRESO") && !request.getTipo().equals("GASTO")) {
+            throw new RuntimeException("El tipo debe ser INGRESO o GASTO");
+        }
+
+        if (request.getMonto().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new RuntimeException("Debes ingresar un monto válido");
+        }
+
         Category category = categoryRepository.findById(request.getCategoriaId())
                 .orElseThrow(() -> new RuntimeException("Categoría no válida"));
 
-        // Crear la transacción
         Transaction transaction = new Transaction();
         transaction.setTipo(request.getTipo());
         transaction.setMonto(request.getMonto());
-        transaction.setFecha(request.getFecha());
+        transaction.setFecha(LocalDate.now()); // se asigna automáticamente
         transaction.setUsuario(user);
         transaction.setCategoria(category);
 
