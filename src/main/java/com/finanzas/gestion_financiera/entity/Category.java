@@ -3,6 +3,8 @@ package com.finanzas.gestion_financiera.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 @Data
 @Entity
 @Table(name = "categorias")
@@ -22,6 +24,9 @@ public class Category {
     @ManyToOne
     @JoinColumn(name = "usuario_id", nullable = false)
     private User usuario;
+
+    @Column(name = "monto_maximo", nullable = false)
+    private BigDecimal montoMaximo;
 
     public enum TipoCategoria {
         INGRESO, GASTO

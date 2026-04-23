@@ -26,6 +26,7 @@ public class CategoryService {
         category.setNombre(request.getNombre());
         category.setTipo(request.getTipo());
         category.setUsuario(user);
+        category.setMontoMaximo(request.getMontoMaximo());
         categoryRepository.save(category);
         return toResponse(category);
     }
@@ -51,6 +52,7 @@ public class CategoryService {
                 .orElseThrow(() -> new RuntimeException("Categoría no encontrada"));
         category.setNombre(request.getNombre());
         category.setTipo(request.getTipo());
+        category.setMontoMaximo(request.getMontoMaximo());
         categoryRepository.save(category);
         return toResponse(category);
     }
@@ -69,6 +71,6 @@ public class CategoryService {
     }
 
     private CategoryResponse toResponse(Category category) {
-        return new CategoryResponse(category.getId(), category.getNombre(), category.getTipo());
+        return new CategoryResponse(category.getId(), category.getNombre(), category.getTipo(), category.getMontoMaximo());
     }
 }
